@@ -1,6 +1,8 @@
 name: Build Android APK
 
 on:
+  push:
+    branches: [main]
   workflow_dispatch:
 
 jobs:
@@ -27,14 +29,24 @@ jobs:
     - name: Set JAVA_HOME
       run: echo "JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64" >> $GITHUB_ENV
 
+    - name: Accept Android SDK licenses
+      run: |
+        yes | ~/.buildozer/android/platform/android-sdk/cmdline-tools/latest/bin/sdkmanager --licenses || true
+        yes | ~/.buildozer/android/platform/android-sdk/tools/bin/sdkmanager --licenses || true
+
     - name: Build APK
       working-directory: sanxian
       run: |
-        ~/.local/bin/buildozer android debug
-        cp sanxian/bin/*.apk ../sanxian.apk
+        ~/.local/bin/buildozer android debug --verbose 2>&1 | tail -100
 
     - name: Upload APK
+      if: success()
       uses: actions/upload-artifact@v4
       with:
         name: sanxian-apk
-        path: sanxian.apk
+        path: sanxian/bin/*.apk
+
+    - name: Show build logs on failure
+      if: failure()
+      run: |
+        cat sanxian/.buildozer/logs/*.log || echo "No buildozer logs found"
