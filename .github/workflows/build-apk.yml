@@ -28,25 +28,29 @@ jobs:
     - name: Set JAVA_HOME                                                                                             
       run: echo "JAVA_HOME=/usr/lib/jvm/temurin-17-jdk-amd64" >> $GITHUB_ENV                                          
                                                                                                                       
-    - name: Pre-setup Android SDK                                                                                     
-      run: |                                                                                                          
-        export ANDROID_HOME=~/.buildozer/android/platform/android-sdk                                                 
-        mkdir -p $ANDROID_HOME                                                                                        
-        cd $ANDROID_HOME                                                                                              
-        wget -q https://dl.google.com/android/repository/commandlinetools-linux-11076708_latest.zip -O cmdline-tools.zip                                                                                                     
-        unzip -q cmdline-tools.zip                                                                                    
-        mkdir -p cmdline-tools/latest                                                                                 
-        mv cmdline-tools/* cmdline-tools/latest/ 2>/dev/null || true                                                  
-        rm cmdline-tools.zip                                                                                          
-        mkdir -p tools/bin                                                                                            
-        ln -sf ../cmdline-tools/latest/bin/sdkmanager tools/bin/sdkmanager 2>/dev/null || true                        
-                                                                                                                      
-    - name: Accept licenses and install SDK components                                                                
-      run: |                                                                                                          
-        export ANDROID_HOME=~/.buildozer/android/platform/android-sdk                                                 
-        export PATH=$ANDROID_HOME/cmdline-tools/latest/bin:$ANDROID_HOME/platform-tools:$PATH                         
-        yes | sdkmanager --licenses 2>/dev/null || true                                                               
-        sdkmanager --install "build-tools;34.0.0" "platforms;android-34" "platform-tools" 2>&1 | tail -20             
+    - name: Pre-setup Android SDK
+      run: |
+        export ANDROID_HOME=/home/runner/.buildozer/android/platform/android-sdk
+        mkdir -p $ANDROID_HOME/cmdline-tools
+        cd $ANDROID_HOME/cmdline-tools
+        wget -q https://dl.google.com/android/repository/commandlinetools-linux-11076708_latest.zip -O
+cmdline-tools.zip
+        unzip -q cmdline-tools.zip
+        mv cmdline-tools cmdline-tools-tmp 2>/dev/null || true
+        mkdir -p cmdline-tools
+        mv cmdline-tools-tmp cmdline-tools/latest 2>/dev/null || true
+        rm -f cmdline-tools.zip
+        ln -sf $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager $ANDROID_HOME/tools/bin/sdkmanager 2>/dev/null ||
+true
+        mkdir -p $ANDROID_HOME/tools/bin
+        ln -sf $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager $ANDROID_HOME/tools/bin/sdkmanager
+
+    - name: Accept licenses and install SDK components
+      run: |
+          export ANDROID_HOME=/home/runner/.buildozer/android/platform/android-sdk
+          export PATH=$ANDROID_HOME/cmdline-tools/latest/bin:$ANDROID_HOME/tools/bin:$PATH
+          yes | sdkmanager --licenses 2>/dev/null || true
+          sdkmanager --install "build-tools;34.0.0" "platforms;android-34" "platform-tools" 2>&1 | tail -20           
                                                                                                                       
     - name: Build APK                                                                                                 
       working-directory: sanxian                                                                                      
