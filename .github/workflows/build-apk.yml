@@ -44,6 +44,8 @@ jobs:
         chmod +x $ANDROID_HOME/tools/bin/sdkmanager
         ls -la $ANDROID_HOME/tools/bin/
 
+    - name: Set Android SDK path
+      run: echo "ANDROID_HOME=/usr/local/lib/android/sdk" >> $GITHUB_ENV
     - name: Accept licenses and install SDK components
       run: |
         export ANDROID_HOME=/home/runner/.buildozer/android/platform/android-sdk
