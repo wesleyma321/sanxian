@@ -43,6 +43,7 @@ android.archs = arm64-v8a, armeabi-v7a
 # ios.ios_deploy_url = https://github.com/phonegap/ios-deploy
 
 [buildozer]
+android.sdk_path = /usr/local/lib/android/sdk
 
 # 日志级别
 log_level = 2
