@@ -33,16 +33,14 @@ jobs:
         export ANDROID_HOME=/home/runner/.buildozer/android/platform/android-sdk
         mkdir -p $ANDROID_HOME/cmdline-tools
         cd $ANDROID_HOME/cmdline-tools
-        wget -q https://dl.google.com/android/repository/commandlinetools-linux-11076708_latest.zip -O
-cmdline-tools.zip
+        wget -q https://dl.google.com/android/repository/commandlinetools-linux-11076708_latest.zip -O cmdline-tools.zip
         unzip -q cmdline-tools.zip
         mv cmdline-tools cmdline-tools-tmp 2>/dev/null || true
         mkdir -p cmdline-tools
         mv cmdline-tools-tmp cmdline-tools/latest 2>/dev/null || true
         rm -f cmdline-tools.zip
-        ln -sf $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager $ANDROID_HOME/tools/bin/sdkmanager 2>/dev/null ||
-true
-        mkdir -p $ANDROID_HOME/tools/bin
+        ln -sf $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager $ANDROID_HOME/tools/bin/sdkmanager 2>/dev/null || true
+        mkdir -p $ANDROID_HOME/tools/bin 
         ln -sf $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager $ANDROID_HOME/tools/bin/sdkmanager
 
     - name: Accept licenses and install SDK components
