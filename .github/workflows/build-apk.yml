@@ -56,7 +56,7 @@ jobs:
     - name: Build APK                                                                                                 
       working-directory: sanxian                                                                                      
       run: |                                                                                                          
-        ~/.local/bin/buildozer android debug --verbose 2>&1 | tail -100                                               
+        ~/.local/bin/buildozer android debug 2>&1                                              
                                                                                                                       
     - name: Upload APK                                                                                                
       if: success()                                                                                                   
