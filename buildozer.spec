@@ -60,18 +60,3 @@ android.ndk_version = 28c
 
 # Android API 级别
 android.api_level = 34
-
-# 构建模式
-build_mode = debug
-
-# Android SDK路径（如果不在默认位置）
-# android.sdk_path = /path/to/android/sdk
-
-# Android NDK路径（如果需要）
-# android.ndk_path = /path/to/android/ndk
-
-# Android NDK版本
-android.ndk_version = 21
-
-# Android API级别
-android.api_level = 27
