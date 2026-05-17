@@ -55,20 +55,11 @@ build_mode = debug
 # Android SDK 路径
 android.sdk_path = /usr/local/lib/android/sdk
 
-# Android NDK 版本（留空让 p4a 自动选择，或设置为 28c）
+# Android NDK 版本
 android.ndk_version = 28c
 
 # Android API 级别
 android.api_level = 34
-
-# 日志级别
-log_level = 2
-
-# 显示构建进度
-show_build_output = True
-
-# 用于创建keystore的密码
-# android.release_keystore_password = your_password
 
 # 构建模式
 build_mode = debug
