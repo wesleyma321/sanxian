@@ -25,44 +25,18 @@ jobs:
         pip3 install --user buildozer==1.5.0 kivy==2.3.0
         pip3 install --user cython==0.29.33
 
-    - name: Setup Android SDK for buildozer
+    - name: Accept SDK licenses
       run: |
-        export ANDROID_HOME=/usr/local/lib/android/sdk
-
-        # Create buildozer's SDK directory structure
-        mkdir -p ~/.buildozer/android/platform/android-sdk
-
-        # Link system SDK to buildozer's location
-        rm -rf ~/.buildozer/android/platform/android-sdk
-        ln -s $ANDROID_HOME ~/.buildozer/android/platform/android-sdk
-
-        # Ensure cmdline-tools exist and create tools/bin/sdkmanager
-        mkdir -p ~/.buildozer/android/platform/android-sdk/tools/bin
-
-        # Check what's in the SDK
-        ls $ANDROID_HOME/cmdline-tools/ 2>/dev/null || echo "No cmdline-tools"
-        ls $ANDROID_HOME/tools/ 2>/dev/null || echo "No tools"
-
-        # Copy sdkmanager to where buildozer expects it
-        if [ -f "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" ]; then
-          cp $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager ~/.buildozer/android/platform/android-sdk/tools/bin/sdkmanager
-          cp $ANDROID_HOME/cmdline-tools/latest/bin/*.jar ~/.buildozer/android/platform/android-sdk/tools/bin/ 2>/dev/null || true
-          chmod +x ~/.buildozer/android/platform/android-sdk/tools/bin/sdkmanager
-        elif [ -f "$ANDROID_HOME/tools/bin/sdkmanager" ]; then
-          cp $ANDROID_HOME/tools/bin/sdkmanager ~/.buildozer/android/platform/android-sdk/tools/bin/sdkmanager
-          chmod +x ~/.buildozer/android/platform/android-sdk/tools/bin/sdkmanager
-        fi
-
-        # Verify
-        ls -la ~/.buildozer/android/platform/android-sdk/tools/bin/ 2>/dev/null || echo "tools/bin not created"
+        mkdir -p ~/.android
+        touch ~/.android/repositories.cfg
+        yes | /usr/local/lib/android/sdk/cmdline-tools/latest/bin/sdkmanager --licenses 2>/dev/null || true
 
     - name: Build APK
       working-directory: sanxian
       env:
-        ANDROID_HOME: /usr/local/lib/android/sdk
         JAVA_HOME: /usr/lib/jvm/temurin-17-jdk-amd64
       run: |
-        ~/.local/bin/buildozer android debug 2>&1 | tee build.log
+        ~/.local/bin/buildozer android debug 2>&1
 
     - name: Upload APK
       if: success()
@@ -70,8 +44,3 @@ jobs:
       with:
         name: sanxian-apk
         path: sanxian/bin/*.apk
-
-    - name: Show build logs on failure
-      if: failure()
-      run: |
-        cat sanxian/build.log 2>/dev/null || cat ~/.buildozer/logs/*.log 2>/dev/null || echo "No logs found"
