@@ -15,26 +15,21 @@ jobs:
       with:
         path: sanxian
 
-    - name: Install system packages
+    - name: Install packages
       run: |
         sudo apt update
-        sudo apt install -y python3-pip python3-dev python3-setuptools build-essential git openjdk-17-jdk-headless unzip wget
+        sudo apt install -y python3-pip python3-dev python3-setuptools build-essential git openjdk-17-jdk-headless
 
     - name: Install Python packages
       run: |
-        pip3 install --user buildozer==1.5.0 kivy==2.3.0
-        pip3 install --user cython==0.29.33
-
-    - name: Accept SDK licenses
-      run: |
-        mkdir -p ~/.android
-        touch ~/.android/repositories.cfg
-        yes | /usr/local/lib/android/sdk/cmdline-tools/latest/bin/sdkmanager --licenses 2>/dev/null || true
+        pip3 install --user buildozer==1.5.0 kivy==2.3.0 cython==0.29.33
 
     - name: Build APK
       working-directory: sanxian
       env:
         JAVA_HOME: /usr/lib/jvm/temurin-17-jdk-amd64
+        ANDROID_HOME: /usr/local/lib/android/sdk
+        ANDROID_SDK_ROOT: /usr/local/lib/android/sdk
       run: |
         ~/.local/bin/buildozer android debug 2>&1
 
