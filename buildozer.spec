@@ -19,7 +19,7 @@ version = 1.0.0
 description = 中国传统技艺三仙归洞游戏
 
 # 需求列表
-requirements = kivy
+requirements = kivy==2.3.0
 
 # 屏幕方向
 orientation = portrait
@@ -43,7 +43,23 @@ android.archs = arm64-v8a, armeabi-v7a
 # ios.ios_deploy_url = https://github.com/phonegap/ios-deploy
 
 [buildozer]
+# 日志级别
+log_level = 2
+
+# 显示构建进度
+show_build_output = True
+
+# 构建模式
+build_mode = debug
+
+# Android SDK 路径
 android.sdk_path = /usr/local/lib/android/sdk
+
+# Android NDK 版本（留空让 p4a 自动选择，或设置为 28c）
+android.ndk_version = 28c
+
+# Android API 级别
+android.api_level = 34
 
 # 日志级别
 log_level = 2
